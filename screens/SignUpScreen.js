@@ -308,6 +308,7 @@ export default function SignUpScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#0A2262"
   },
   logo: {
     fontSize: 35,
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     padding: 24,
-    marginTop: 30,
+    marginTop: 60,
   },
   title: {
     fontSize: 24,
