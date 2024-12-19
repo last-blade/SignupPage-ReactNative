@@ -39,11 +39,11 @@ export default function SignUpScreen() {
   const countryOptions = [
     {label: '+91', value: "+91"},
     {label: '+1', value: "+1"},
-    {label: '+16 ', value: "India"},
-    {label: '+133 ', value: "India"},
-    {label: '+42 ', value: "India"},
-    {label: '+119 ', value: "India"},
-    {label: '+122 ', value: "India"},
+    {label: '+16', value: "+16"},
+    {label: '+13 ', value: "+13"},
+    {label: '+42 ', value: "+42"},
+    {label: '+11 ', value: "+11"},
+    {label: '+22 ', value: "+22"},
   ]
 
   const handleNameChange = (text) => {
