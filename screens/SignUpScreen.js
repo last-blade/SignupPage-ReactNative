@@ -18,6 +18,7 @@ export default function SignUpScreen() {
     phone: '',
     password: '',
     confirmPassword: '',
+    countryCode: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -37,7 +38,7 @@ export default function SignUpScreen() {
 
   const countryOptions = [
     {label: '+91', value: "+91"},
-    {label: '+1 ', value: "+1"},
+    {label: '+1', value: "+1"},
     {label: '+16 ', value: "India"},
     {label: '+133 ', value: "India"},
     {label: '+42 ', value: "India"},
@@ -45,10 +46,25 @@ export default function SignUpScreen() {
     {label: '+122 ', value: "India"},
   ]
 
+  const handleNameChange = (text) => {
+    const nameRegex = /^[A-Za-z\s]*$/;
+    
+    if (nameRegex.test(text)) {
+      setFormData({ ...formData, name: text });
+      setErrors({ ...errors, name: '' });
+    } else {
+      setErrors({
+        ...errors,
+        name: 'Name must only contain English letters.',
+      });
+    }
+  };
+
   const dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
   const validateForm = () => {
     const newErrors = {};
+    
 
     if (!formData.name || formData.name.length < 2) {
       newErrors.name = 'Name must be at least 2 characters.';
@@ -104,6 +120,7 @@ export default function SignUpScreen() {
         phone: '',
         password: '',
         confirmPassword: '',
+        countryCode,
       });
       setErrors({});
       setAgreeToTerms(false); 
@@ -136,7 +153,8 @@ export default function SignUpScreen() {
           label="Name"
           placeholder="Enter your full name"
           value={formData.name}
-          onChangeText={(text) => setFormData({ ...formData, name: text })}
+          onChangeText={handleNameChange}
+          
         />
         {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
@@ -191,6 +209,7 @@ export default function SignUpScreen() {
         <View style={styles.phoneFieldContainer}>
   <View style={styles.countryDropdownContainer}>
     <CustomInput
+    label='Phone'
       type="dropdown"
       placeholder="Select Country Code"
       value={countryCode}
@@ -200,13 +219,17 @@ export default function SignUpScreen() {
     />
   </View>
   <CustomInput
-    placeholder="Enter phone number"
-    value={formData.phone}
-    onChangeText={(text) =>
-      setFormData({ ...formData, phone: text.replace(/[^\d+\(\)\-\s]/g, '') })
+  placeholder="Enter phone number"
+  value={formData.phone}
+  onChangeText={(text) => {
+    const cleanedText = text.replace(/[^\d]/g, '');
+    if (cleanedText.length <= 10) {
+      setFormData({ ...formData, phone: cleanedText });
     }
-    style={styles.phoneInput}
-  />
+  }}
+  style={styles.phoneInput}
+/>
+
 </View>
 
         
@@ -218,7 +241,7 @@ export default function SignUpScreen() {
           value={formData.password}
           onChangeText={(text) => setFormData({ ...formData, password: text })}
           isPassword={!showPassword}
-          showPasswordToggle
+          showPasswordToggle={formData.password.length > 0}
           onTogglePassword={() => setShowPassword(!showPassword)}
         />
         {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
@@ -229,7 +252,7 @@ export default function SignUpScreen() {
           value={formData.confirmPassword}
           onChangeText={(text) => setFormData({ ...formData, confirmPassword: text })}
           isPassword={!showConfirmPassword}
-          showPasswordToggle
+          
           onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
         />
         {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
@@ -259,7 +282,7 @@ export default function SignUpScreen() {
         <View style={styles.socialContainer}>
           <SocialButton
             icon="https://imgs.search.brave.com/cwnxLnWTaI9VhUw1ZTsedEpK7TmtN7ffCsO4TcPTHuI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMtMDAuaWNvbmR1/Y2suY29tL2Fzc2V0/cy4wMC9mYWNlYm9v/ay1pY29uLTI1Nngy/NTYtb3FhM3lnYTYu/cG5n"
-            onPress={() => {/* Handle Facebook login */}}
+            onPress={() => {/* */}}
           />
           <SocialButton
             icon="https://imgs.search.brave.com/xj-TV7sqj2Dzi76ov-9LZ-vSQ6x0UYbHi3RFyXksBSY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMtMDAuaWNvbmR1/Y2suY29tL2Fzc2V0/cy4wMC9nb29nbGUt/aWNvbi0yMDQ4eDIw/NDgtY3puM2c4eDgu/cG5n"
@@ -267,13 +290,13 @@ export default function SignUpScreen() {
           />
           <SocialButton
             icon="https://imgs.search.brave.com/rXn2LeAuAeK2VqWCWPyD4PaLj3RDr-wDqIB6ChO_AFg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly8xMDAw/bG9nb3MubmV0L3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE3LzAy/L0FwcGxlLUxvZ29z/dS01MDB4MjgxLnBu/Zw"
-            onPress={() => {/* Handle Apple login */}}
+            onPress={() => {/* */}}
           />
         </View>
 
         <View style={styles.loginContainer}>
           <Text style={styles.loginText}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => {/* Handle navigation to login */}}>
+          <TouchableOpacity onPress={() => {/* login kaa navigation lagana hai */}}>
             <Text style={styles.loginLink}>Log In</Text>
           </TouchableOpacity>
         </View>
@@ -314,15 +337,16 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     lineHeight: 24,
   },
-  dobContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  dobInput: {
-    flex: 1,
-    paddingRight: 40,
-  },
+  // dobContainer: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   marginBottom: 20,
+  //   width: "100%"
+  // },
+  // dobInput: {
+  //   flex: 1,
+  //   paddingRight: 40,
+  // },
   dateIconContainer: {
     position: 'absolute',
     right: 10,
@@ -330,7 +354,14 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -12 }],
     marginTop: 4,
   },
+
+  dobContainer: {
+    position: "relative"
+  },
+
+
   dateIcon: {
+    // position: "absolute",
     width: 20,
     height: 20,
   },
@@ -400,7 +431,7 @@ const styles = StyleSheet.create({
     // borderRadius: 8,
     marginBottom: 20,
     // backgroundColor: '#FFF',
-    paddingLeft: 63, // Ensure padding accounts for the dropdown width
+    paddingLeft: 63,
   },
   
   phoneInput: {
@@ -414,7 +445,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: -250,
     top: '50%',
-    transform: [{ translateY: -48 }], // Center the dropdown vertically
+    transform: [{ translateY: -48 }],
     zIndex: 10,
     width: 76,
     marginLeft: 250,

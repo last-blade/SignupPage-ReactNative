@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import PropTypes from 'prop-types';  // Import PropTypes for prop validation
+import PropTypes from 'prop-types';
 
 const CustomInput = ({
   label,
@@ -59,6 +59,8 @@ const CustomInput = ({
         {showPasswordToggle && (
           <TouchableOpacity onPress={onTogglePassword} style={styles.icon}>
             {/* <Eye size={20} color="#A0A0A0" /> */}
+            {/* <Text style={{color: "blue"}}>{isPassword ? 'Show' : 'Hide'}</Text> */}
+            {isPassword ? <Image style={styles.eyeicon} source={require('../visible.png')} /> : <Image style={styles.eyeicon} source={require('../hide.png')} />} 
           </TouchableOpacity>
         )}
         {showCalendar && (
@@ -118,25 +120,31 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 48,  // Make sure input fields are the same height
+    height: 48,  
     paddingHorizontal: 16,
     fontSize: 16,
     color: '#0A1F44',
   },
   dropdown: {
     flex: 1,
-    height: 48,  // Ensure dropdown height matches text input height
+    height: 48,  
     paddingHorizontal: 16,
     fontSize: 16,
     color: '#0A1F44',
   },
   icon: {
     padding: 12,
+    // backgroundColor: "red"
   },
   dropdownIcon: {
     fontSize: 16,
     color: '#A0A0A0',
   },
+
+  eyeicon: {
+    width: 20,
+    height: 20
+  }
 });
 
 export default CustomInput;

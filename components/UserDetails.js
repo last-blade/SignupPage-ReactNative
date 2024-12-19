@@ -11,7 +11,7 @@ const UserDetails = ({ route }) => {
       <Text style={styles.detail}>Date of Birth: {user.dateOfBirth}</Text>
       <Text style={styles.detail}>Gender: {user.gender}</Text>
       <Text style={styles.detail}>Email: {user.email}</Text>
-      <Text style={styles.detail}>Phone: {user.phone}</Text>
+      <Text style={styles.detail}>Phone: {user.countryCode}{"-"}{user.phone}</Text>
     </View>
   );
 };
