@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import SocialButton from '../components/SocialButton';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker'; 
+import DropDownPicker from 'react-native-dropdown-picker';
+import PhoneInput from 'react-native-phone-number-input';
 
 
 export default function SignUpScreen() {
@@ -28,6 +30,19 @@ export default function SignUpScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false); 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [countryCode, setCountryCode] = useState('+91');
+  const [items, setItems] = useState([
+    {label: '+91 (IN)', value: "+91"},
+    {label: '+1 (US)', value: "+1"},
+    {label: '+16 (UK)', value: "+16"},
+    {label: '+13 (FR)', value: "+13"},
+    {label: '+42 (JP)', value: "+42"},
+    {label: '+11 (AU)', value: "+11"},
+    {label: '+22 (BE)', value: "+22"},
+    
+]);
+const [open, setOpen] = useState(false);
+const [value, setValue] = useState(null);
+const [phone, setPhone] = useState(' ')
   
 
   const genderOptions = [
@@ -37,15 +52,15 @@ export default function SignUpScreen() {
   ];
 
   const countryOptions = [
-    {label: '+91', value: "+91"},
-    {label: '+1', value: "+1"},
-    {label: '+16', value: "+16"},
-    {label: '+13 ', value: "+13"},
-    {label: '+42 ', value: "+42"},
-    {label: '+11 ', value: "+11"},
-    {label: '+22 ', value: "+22"},
+    {label: '+91 (IN)', value: "+91"},
+    {label: '+1 (US)', value: "+1"},
+    {label: '+16 (UK)', value: "+16"},
+    {label: '+13 (FR)', value: "+13"},
+    {label: '+42 (JP)', value: "+42"},
+    {label: '+11 (AU)', value: "+11"},
+    {label: '+22 (BE)', value: "+22"},
   ]
-
+  const maxHeight = open ? 400 : 200;
   const handleNameChange = (text) => {
     const nameRegex = /^[A-Za-z\s]*$/;
     
@@ -59,6 +74,22 @@ export default function SignUpScreen() {
       });
     }
   };
+
+  const screenWidth = 365
+  const [containerWidth, setContainerWidth] = useState(90); // Initial width set to 90
+
+  // Reset container width after selecting an option
+  const handleSelect = (value) => {
+    setValue(value);
+    setOpen(false); // Close the dropdown after selecting an option
+  };
+
+  // Effect to reset width after selection
+  useEffect(() => {
+    if (!open) {
+      setContainerWidth(100); // Reset to 90 after closing
+    }
+  }, [open]); // Trigger when dropdown opens/closes
 
   const dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
@@ -135,6 +166,13 @@ export default function SignUpScreen() {
     }
   };
 
+  const handlePhoneChange = (text) => {
+    const cleanedText = text.replace(/[^\d]/g, ''); // Keep only numbers
+    if (cleanedText.length <= 10) {
+      setFormData({ ...formData, phone: cleanedText });
+    }
+  };
+
   
   const openLink = (url) => {
     Linking.openURL(url);
@@ -166,6 +204,7 @@ export default function SignUpScreen() {
             value={formData.dateOfBirth}
             editable={false}
             style={styles.dobInput}
+            onChangeText={null}
           />
           <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateIconContainer}>
             <Image
@@ -207,30 +246,32 @@ export default function SignUpScreen() {
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
         <View style={styles.phoneFieldContainer}>
-  <View style={styles.countryDropdownContainer}>
-    <CustomInput
-    label='Phone'
-      type="dropdown"
-      placeholder="Select Country Code"
-      value={countryCode}
-      onSelect={(value) => setCountryCode(value)}
-      data={countryOptions}
-      style={[styles.countryDropdown]}
-    />
-  </View>
-  <CustomInput
+          <Text style={styles.label}>Phone No.</Text>
+          <PhoneInput
+  defaultValue={formData.phone}
+  defaultCode="US"
+  layout="first"
+  onChangeFormattedText={handlePhoneChange}
+  containerStyle={styles.phoneInputContainer}
+  textContainerStyle={styles.phoneTextContainer}
+  label="Phone No."
   placeholder="Enter phone number"
   value={formData.phone}
-  onChangeText={(text) => {
-    const cleanedText = text.replace(/[^\d]/g, '');
-    if (cleanedText.length <= 10) {
-      setFormData({ ...formData, phone: cleanedText });
-    }
-  }}
-  style={styles.phoneInput}
+  placeholderTextColor="black" 
 />
-
-</View>
+              {/* <CustomInput
+              label='Phone No.'
+              placeholder="| Enter phone number"
+              value={formData.phone}
+              onChangeText={(text) => {
+                const cleanedText = text.replace(/[^\d]/g, '');
+                if (cleanedText.length <= 10) {
+                  setFormData({ ...formData, phone: cleanedText });
+                }
+              }}
+              style={[styles.phoneInput]}
+            /> */}
+      </View>
 
         
         {errors.phone && <Text style={styles.errorText}>{errors.phone}</Text>}
@@ -254,6 +295,7 @@ export default function SignUpScreen() {
           isPassword={!showConfirmPassword}
           
           onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
+          style={{color: "black"}}
         />
         {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
 
@@ -368,9 +410,10 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
-    fontSize: 12,
-    marginTop: 5,
+    fontSize: 16,
+    // marginTop: 5,
     marginBottom: 10,
+    bottom: 15
   },
   termsContainer: {
     flexDirection: 'row',
@@ -432,14 +475,17 @@ const styles = StyleSheet.create({
     // borderRadius: 8,
     marginBottom: 20,
     // backgroundColor: '#FFF',
-    paddingLeft: 63,
+    // borderColor: '#E5E5E5',
+    
   },
   
   phoneInput: {
-    paddingVertical: 10,
-    paddingRight: 10,
+    // paddingVertical: 10,
+    // paddingRight: 10,
     fontSize: 16,
     flex: 1,
+    // paddingHorizontal: 80,
+    // paddingLeft: 90,
   },
   
   countryDropdownContainer: {
@@ -448,8 +494,30 @@ const styles = StyleSheet.create({
     top: '50%',
     transform: [{ translateY: -48 }],
     zIndex: 10,
-    width: 76,
+    width: 103,
     marginLeft: 250,
   },
-  
+
+  countryDropdown: {
+    top: 40
+  },
+
+
+
+
+
+
+
+  phoneInputContainer: { 
+    borderWidth: 1, 
+    borderColor: '#ccc', 
+    borderRadius: 5, 
+    marginBottom: 10, 
+    width: '100%'
+  },
+
+  phoneTextContainer: { 
+    paddingVertical: 1, 
+    paddingHorizontal: 15, 
+  },
 });

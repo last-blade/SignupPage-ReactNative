@@ -26,6 +26,11 @@ const CustomInput = ({
         {type === 'dropdown' ? (
           <Dropdown
             style={styles.dropdown}
+            containerStyle={{
+              // position: 'absolute',
+              // zIndex: 10, 
+              top: -65
+            }}
             data={data || []}
             labelField="label"
             valueField="value"
@@ -83,7 +88,7 @@ CustomInput.propTypes = {
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
-  onChangeText: PropTypes.func.isRequired,
+  onChangeText: PropTypes.func,
   type: PropTypes.oneOf(['text', 'password', 'date', 'dropdown']),
   isPassword: PropTypes.bool,
   showPasswordToggle: PropTypes.bool,
@@ -117,13 +122,13 @@ const styles = StyleSheet.create({
     borderColor: '#E5E5E5',
     borderRadius: 8,
     backgroundColor: 'white',
+    position: "relative",
   },
   input: {
     flex: 1,
     height: 48,  
     paddingHorizontal: 16,
     fontSize: 16,
-    color: '#0A1F44',
   },
   dropdown: {
     flex: 1,
@@ -131,6 +136,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 16,
     color: '#0A1F44',
+    // borderWidth: 2
   },
   icon: {
     padding: 12,
