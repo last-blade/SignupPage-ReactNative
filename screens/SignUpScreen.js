@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Linking, KeyboardAvoidingView, TextInput } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 import SocialButton from '../components/SocialButton';
@@ -20,7 +20,7 @@ export default function SignUpScreen() {
     phone: '',
     password: '',
     confirmPassword: '',
-    countryCode: '',
+    countryCode: '',              
   });
 
   const [errors, setErrors] = useState({});
@@ -153,6 +153,7 @@ const [phone, setPhone] = useState(' ')
         confirmPassword: '',
         countryCode,
       });
+      setPhone('');
       setErrors({});
       setAgreeToTerms(false); 
     }
@@ -179,6 +180,10 @@ const [phone, setPhone] = useState(' ')
   };
 
   return (
+    <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust behavior for iOS and Android
+  >
     <ScrollView style={styles.container}>
       <View style={styles.card}>
         <Text style={styles.logo}>Cambeo</Text>
@@ -196,22 +201,24 @@ const [phone, setPhone] = useState(' ')
         />
         {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
-        
-        <View style={styles.dobContainer}>
-          <CustomInput
-            label="Date Of Birth"
-            placeholder="DD/MM/YYYY"
-            value={formData.dateOfBirth}
-            editable={false}
-            style={styles.dobInput}
-            onChangeText={null}
-          />
-          <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateIconContainer}>
-            <Image
-              source={{ uri: 'https://imgs.search.brave.com/vYb1yAVLCTz6z04oWcB_cc6iAvo1htOIpxkIYFjTOvo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA3Lzk3LzE4LzQ1/LzM2MF9GXzc5NzE4/NDUxOV8wakhvQjVZ/VGRvQ2VUazVSNEFt/OVlwQ1VOUTJsemFZ/RC5qcGc' }}
-              style={styles.dateIcon}
-            />
-          </TouchableOpacity>
+        <Text style={styles.dobText}>Date of Birth</Text>
+        <View style={styles.dobContainer} onPress={() => setShowDatePicker(true)} >
+        <TouchableOpacity
+    onPress={() => setShowDatePicker(true)} // Trigger the date picker
+    style={styles.dobInput} // Style as needed
+    activeOpacity={1} // Prevent any effect when pressed
+  >
+    <Text>{formData.dateOfBirth || 'DD/MM/YYYY'}</Text>
+  </TouchableOpacity>
+
+  <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateIconContainer}>
+    <Image
+      source={{
+        uri: 'https://imgs.search.brave.com/vYb1yAVLCTz6z04oWcB_cc6iAvo1htOIpxkIYFjTOvo/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA3Lzk3LzE4LzQ1/LzM2MF9GXzc5NzE4/NDUxOV8wakhvQjVZ/VGRvQ2VUazVSNEFt/OVlwQ1VOUTJsemFZ/RC5qcGc',
+      }}
+      style={styles.dateIcon}
+    />
+  </TouchableOpacity>
         </View>
         {errors.dateOfBirth && <Text style={styles.errorText}>{errors.dateOfBirth}</Text>}
 
@@ -248,17 +255,17 @@ const [phone, setPhone] = useState(' ')
         <View style={styles.phoneFieldContainer}>
           <Text style={styles.label}>Phone No.</Text>
           <PhoneInput
-  defaultValue={formData.phone}
-  defaultCode="US"
-  layout="first"
-  onChangeFormattedText={handlePhoneChange}
-  containerStyle={styles.phoneInputContainer}
-  textContainerStyle={styles.phoneTextContainer}
-  label="Phone No."
-  placeholder="Enter phone number"
-  value={formData.phone}
-  placeholderTextColor="black" 
-/>
+            defaultValue={formData.phone}
+            defaultCode="US"
+            layout="first"
+            onChangeText={handlePhoneChange}
+            containerStyle={styles.phoneInputContainer}
+            textContainerStyle={styles.phoneTextContainer}
+            label="Phone No."
+            placeholder="Enter phone number"
+            value={formData.phone}
+            placeholderTextColor="black" 
+        />
               {/* <CustomInput
               label='Phone No.'
               placeholder="| Enter phone number"
@@ -284,6 +291,8 @@ const [phone, setPhone] = useState(' ')
           isPassword={!showPassword}
           showPasswordToggle={formData.password.length > 0}
           onTogglePassword={() => setShowPassword(!showPassword)}
+          style={{ color: "black" }}
+          textInputStyle={{ color: 'black' }}
         />
         {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
@@ -344,6 +353,7 @@ const [phone, setPhone] = useState(' ')
         </View>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -399,7 +409,12 @@ const styles = StyleSheet.create({
   },
 
   dobContainer: {
-    position: "relative"
+    position: "relative",
+    marginTop: 14,
+    marginBottom: 22,
+    borderWidth: 0.2,
+    padding: 17,
+    borderRadius: 8
   },
 
 
@@ -407,6 +422,7 @@ const styles = StyleSheet.create({
     // position: "absolute",
     width: 20,
     height: 20,
+    top: 14
   },
   errorText: {
     color: 'red',
@@ -502,6 +518,10 @@ const styles = StyleSheet.create({
     top: 40
   },
 
+  passwordText: {
+    color: "red"
+  },
+
 
 
 
@@ -513,7 +533,8 @@ const styles = StyleSheet.create({
     borderColor: '#ccc', 
     borderRadius: 5, 
     marginBottom: 10, 
-    width: '100%'
+    width: '100%',
+    backgroundColor: 'transparent',
   },
 
   phoneTextContainer: { 
