@@ -42,7 +42,7 @@ const CustomInput = ({
           />
         ) : type === 'date' ? (
           <TextInput
-            style={styles.input}
+          style={[styles.input, { color: 'black' }]}
             placeholder={placeholder}
             placeholderTextColor="#A0A0A0"
             value={value}
@@ -51,12 +51,13 @@ const CustomInput = ({
           />
         ) : (
           <TextInput
-            style={styles.input}
+          style={[styles.input, { color: 'black' }]}
             placeholder={placeholder}
             placeholderTextColor="#A0A0A0"
             value={value}
             onChangeText={onChangeText}
             secureTextEntry={isPassword}
+            
           />
         )}
 
@@ -83,7 +84,6 @@ const CustomInput = ({
   );
 };
 
-// PropTypes for prop validation in JavaScript
 CustomInput.propTypes = {
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string.isRequired,

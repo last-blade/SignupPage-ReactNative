@@ -76,20 +76,20 @@ const [phone, setPhone] = useState(' ')
   };
 
   const screenWidth = 365
-  const [containerWidth, setContainerWidth] = useState(90); // Initial width set to 90
+  const [containerWidth, setContainerWidth] = useState(90); 
 
-  // Reset container width after selecting an option
+
   const handleSelect = (value) => {
     setValue(value);
-    setOpen(false); // Close the dropdown after selecting an option
+    setOpen(false); 
   };
 
-  // Effect to reset width after selection
+
   useEffect(() => {
     if (!open) {
-      setContainerWidth(100); // Reset to 90 after closing
+      setContainerWidth(100);
     }
-  }, [open]); // Trigger when dropdown opens/closes
+  }, [open]); 
 
   const dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
@@ -168,7 +168,7 @@ const [phone, setPhone] = useState(' ')
   };
 
   const handlePhoneChange = (text) => {
-    const cleanedText = text.replace(/[^\d]/g, ''); // Keep only numbers
+    const cleanedText = text.replace(/[^\d]/g, ''); 
     if (cleanedText.length <= 10) {
       setFormData({ ...formData, phone: cleanedText });
     }
@@ -182,7 +182,7 @@ const [phone, setPhone] = useState(' ')
   return (
     <KeyboardAvoidingView
     style={{ flex: 1 }}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust behavior for iOS and Android
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
   >
     <ScrollView style={styles.container}>
       <View style={styles.card}>
@@ -204,9 +204,9 @@ const [phone, setPhone] = useState(' ')
         <Text style={styles.dobText}>Date of Birth</Text>
         <View style={styles.dobContainer} onPress={() => setShowDatePicker(true)} >
         <TouchableOpacity
-    onPress={() => setShowDatePicker(true)} // Trigger the date picker
-    style={styles.dobInput} // Style as needed
-    activeOpacity={1} // Prevent any effect when pressed
+    onPress={() => setShowDatePicker(true)} 
+    style={styles.dobInput} 
+    activeOpacity={1} 
   >
     <Text>{formData.dateOfBirth || 'DD/MM/YYYY'}</Text>
   </TouchableOpacity>
