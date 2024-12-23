@@ -265,6 +265,11 @@ const [phone, setPhone] = useState(' ')
             placeholder="Enter phone number"
             value={formData.phone}
             placeholderTextColor="black" 
+            textInputProps={{
+              maxLength: 10, 
+              keyboardType: 'numeric',
+            }}
+            keyboardType="number-pad"
         />
               {/* <CustomInput
               label='Phone No.'
